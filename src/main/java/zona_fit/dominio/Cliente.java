@@ -2,7 +2,7 @@ package zona_fit.dominio;
 
 import java.util.Objects;
 
-//Esta clase es una reoresentacion de la tabla hecha en la base de datos
+//Esta clase es una representacion de la tabla hecha en la base de datos
 
 public class Cliente {
     private int id;
@@ -17,7 +17,7 @@ public class Cliente {
         this.id = id;
     }
 
-    public Cliente(String nombre, String apellido, int membresia,) {
+    public Cliente(String nombre, String apellido, int membresia) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.membresia = membresia;
