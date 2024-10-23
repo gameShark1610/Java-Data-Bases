@@ -1,4 +1,32 @@
 package zona_fit.datos;
 
-public class ClienteDAO {
+import zona_fit.dominio.Cliente;
+
+import java.util.List;
+
+public class ClienteDAO implements IClienteDAO{
+    @Override
+    public List<Cliente> listarClientes() {
+        return List.of();
+    }
+
+    @Override
+    public boolean buscarClientePorId(Cliente cliente) {
+        return false;
+    }
+
+    @Override
+    public boolean agregarCliente(Cliente cliente) {
+        return false;
+    }
+
+    @Override
+    public boolean modificarCLiente(Cliente cliente) {
+        return false;
+    }
+
+    @Override
+    public boolean eliminarCliente(Cliente cliente) {
+        return false;
+    }
 }
