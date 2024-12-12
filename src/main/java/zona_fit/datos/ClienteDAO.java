@@ -9,18 +9,18 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClienteDAO implements IClienteDAO{
+public class ClienteDAO implements IClienteDAO {
     @Override
     public List<Cliente> listarClientes() {
         List<Cliente> clientes = new ArrayList<>();
         PreparedStatement ps;
         ResultSet rs;
         Connection conexion = Conexion.getConnection();
-        var sql= "SELECT * FROM cliente ORDER BY id";
+        var sql = "SELECT * FROM cliente ORDER BY id";
         try {
             ps = conexion.prepareStatement(sql);
             rs = ps.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 var cliente = new Cliente();
                 cliente.setId(rs.getInt("id"));
                 cliente.setNombre(rs.getString("nombre"));
@@ -28,13 +28,13 @@ public class ClienteDAO implements IClienteDAO{
                 cliente.setMembresia(rs.getInt("membresia"));
                 clientes.add(cliente);
             }
-        }catch (Exception e){
-            System.out.println("Error al listar clientes: "+e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error al listar clientes: " + e.getMessage());
         }
 
         //Por buena practica de programacion hay que cerrar la conexion
         finally {
-            try{
+            try {
                 conexion.close();
             } catch (Exception e) {
                 System.out.println("Error al cerrar conexion: " + e);
@@ -45,6 +45,32 @@ public class ClienteDAO implements IClienteDAO{
 
     @Override
     public boolean buscarClientePorId(Cliente cliente) {
+        PreparedStatement ps;
+        ResultSet rs;
+        Connection conexion = Conexion.getConnection();
+        var sql = "SELECT * FROM cliente WHERE id = ?";
+        try {
+            ps = conexion.prepareStatement(sql);
+            ps.setInt(1,cliente.getId());
+            rs = ps.executeQuery();
+            if (rs.next()){
+                cliente.setNombre(rs.getString("nombre"));
+                cliente.setApellido(rs.getString("apellido"));
+                cliente.setMembresia(rs.getInt("membresia"));
+                return true;
+            }
+        } catch (Exception e) {
+            System.out.println("Error al recuperar cliente por id" + e.getMessage());
+        }
+
+        finally {
+            try {
+                conexion.close();
+            } catch (Exception e) {
+                System.out.println("Error al cerrar conexion: " + e);
+            }
+        }
+
         return false;
     }
 
@@ -64,9 +90,23 @@ public class ClienteDAO implements IClienteDAO{
     }
 
     public static void main(String[] args) {
+        IClienteDAO clienteDao = new ClienteDAO();
+
+        /*Listar Clientes
         System.out.println("*** Listar Clientes ***");
-        IClienteDAO clienteDao= new ClienteDAO();
         var clientes = clienteDao.listarClientes();
         clientes.forEach(System.out::println);
+        */
+
+        //Buscar por id
+        var cliente1 = new Cliente(3);
+        System.out.println("Cliente antes de la busqueda: "+ cliente1);
+        var encontrado = clienteDao.buscarClientePorId(cliente1);
+        if (encontrado){
+            System.out.println("Cliente encontrado: "+ cliente1);
+        }else System.out.println("No se encontra cliente: "+cliente1.getId());
+
+
+
     }
 }
