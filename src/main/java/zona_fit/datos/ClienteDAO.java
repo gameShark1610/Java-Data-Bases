@@ -92,6 +92,13 @@ public class ClienteDAO implements IClienteDAO {
             System.out.println("Error al insertar cliente" + e.getMessage());
         }
 
+        finally {
+            try {
+                conexion.close();
+            } catch (Exception e) {
+                System.out.println("Error al cerrar conexion: " + e);
+            }
+        }
         return false;
     }
 
@@ -114,11 +121,39 @@ public class ClienteDAO implements IClienteDAO {
             System.out.println("Error al insertar cliente" + e.getMessage());
         }
 
+        finally {
+            try {
+                conexion.close();
+            } catch (Exception e) {
+                System.out.println("Error al cerrar conexion: " + e);
+            }
+        }
+
         return false;
     }
 
     @Override
     public boolean eliminarCliente(Cliente cliente) {
+        PreparedStatement ps;
+        Connection conexion = Conexion.getConnection();
+        var sql = "DELETE FROM cliente WHERE id = ?";
+        try {
+            ps = conexion.prepareStatement(sql);
+            ps.setInt(1,cliente.getId());
+            ps.execute();
+            return true;
+
+        } catch (Exception e) {
+            System.out.println("Error al eliminar cliente" + e.getMessage());
+        }
+
+        finally {
+            try {
+                conexion.close();
+            } catch (Exception e) {
+                System.out.println("Error al cerrar conexion: " + e.getMessage());
+            }
+        }
         return false;
     }
 
@@ -142,11 +177,20 @@ public class ClienteDAO implements IClienteDAO {
 
          */
 
-        //Modificar Cliente
+        /*Modificar Cliente
         var modificarCliente = new Cliente(1,"Yair","Arciniega",100);
         var agregado= clienteDao.modificarCLiente(modificarCliente);
         if (agregado) System.out.println("Cliente actualizado: "+ modificarCliente);
         else System.out.println("No se actualizo el cliente: "+ modificarCliente);
+
+         */
+
+        //Eliminar
+        var eliminarCliente = new Cliente(2);
+        var agregado= clienteDao.eliminarCliente(eliminarCliente);
+        if (agregado) System.out.println("Cliente eliminado: "+ eliminarCliente);
+        else System.out.println("No se elimino el cliente: "+ eliminarCliente);
+
 
         //Listar Clientes
         System.out.println("*** Listar Clientes ***");
