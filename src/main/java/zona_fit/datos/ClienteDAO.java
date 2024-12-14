@@ -77,7 +77,6 @@ public class ClienteDAO implements IClienteDAO {
     @Override
     public boolean agregarCliente(Cliente cliente) {
         PreparedStatement ps;
-        ResultSet rs;
         Connection conexion = Conexion.getConnection();
         var sql = "INSERT INTO cliente (nombre, apellido, membresia) VALUES ( ? , ? , ? )";
         try {
@@ -98,6 +97,23 @@ public class ClienteDAO implements IClienteDAO {
 
     @Override
     public boolean modificarCLiente(Cliente cliente) {
+        PreparedStatement ps;
+        Connection conexion = Conexion.getConnection();
+        var sql = "UPDATE cliente SET nombre = ?, apellido = ?, membresia = ?  WHERE id = ?";
+        try {
+            ps = conexion.prepareStatement(sql);
+            ps.setString(1,cliente.getNombre());
+            ps.setString(2,cliente.getApellido());
+            ps.setInt(3,cliente.getMembresia());
+            ps.setInt(4,cliente.getId());
+            ps.execute();
+
+            return true;
+
+        } catch (Exception e) {
+            System.out.println("Error al insertar cliente" + e.getMessage());
+        }
+
         return false;
     }
 
@@ -109,12 +125,6 @@ public class ClienteDAO implements IClienteDAO {
     public static void main(String[] args) {
         IClienteDAO clienteDao = new ClienteDAO();
 
-        /*Listar Clientes
-        System.out.println("*** Listar Clientes ***");
-        var clientes = clienteDao.listarClientes();
-        clientes.forEach(System.out::println);
-        */
-
         /*Buscar por id
         var cliente1 = new Cliente(3);
         System.out.println("Cliente antes de la busqueda: "+ cliente1);
@@ -124,11 +134,26 @@ public class ClienteDAO implements IClienteDAO {
         }else System.out.println("No se encontra cliente: "+cliente1.getId());
          */
 
-        //Agregar Cliente
+        /*Agregar Cliente
         var cliente1 = new Cliente("Pepe","Aguilar",300);
         var agregado= clienteDao.agregarCliente(cliente1);
         if (agregado) System.out.println("Cliente agregado: "+ cliente1);
         else System.out.println("No se agrego el cliente: "+ cliente1);
+
+         */
+
+        //Modificar Cliente
+        var modificarCliente = new Cliente(1,"Yair","Arciniega",100);
+        var agregado= clienteDao.modificarCLiente(modificarCliente);
+        if (agregado) System.out.println("Cliente actualizado: "+ modificarCliente);
+        else System.out.println("No se actualizo el cliente: "+ modificarCliente);
+
+        //Listar Clientes
+        System.out.println("*** Listar Clientes ***");
+        var clientes = clienteDao.listarClientes();
+        clientes.forEach(System.out::println);
+
+
 
 
 
